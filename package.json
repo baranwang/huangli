@@ -14,7 +14,9 @@
     "lint": "eslint --fix",
     "change": "changeset"
   },
-  "keywords": [],
+  "keywords": [
+    "黄历"
+  ],
   "author": "baranwang",
   "license": "MIT",
   "dependencies": {
