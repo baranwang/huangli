@@ -25,10 +25,12 @@ tests/
 
 src/
 
-modern.config.*
+rslib.config.*
 vitest.config.*
 eslint.config.*
 tsconfig.json
 .prettierrc
 
 .rslib/
+.github/
+.changeset/
