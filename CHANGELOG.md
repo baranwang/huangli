@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- 3182594: 修改 download url 设置时机
+
+## 1.0.2
+
+### Patch Changes
+
 - b2a2cce: 配置默认 puppeteer 的下载地址
 
 ## 1.0.1
