@@ -1,12 +1,13 @@
 {
   "name": "huangli",
-  "version": "1.0.2",
+  "version": "1.0.1",
   "description": "",
   "types": "./dist/types/index.d.ts",
   "jsnext:source": "./src/index.ts",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "scripts": {
+    "preinstall": "export PUPPETEER_CHROME_DOWNLOAD_BASE_URL=https://cdn.npmmirror.com/binaries/chrome-for-testing",
     "build": "rslib build",
     "watch": "rslib build -w",
     "pretest": "rslib build",
