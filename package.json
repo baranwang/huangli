@@ -1,6 +1,6 @@
 {
   "name": "huangli",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
   "types": "./dist/types/index.d.ts",
   "jsnext:source": "./src/index.ts",
@@ -11,7 +11,8 @@
     "watch": "rslib build -w",
     "pretest": "rslib build",
     "test": "vitest run",
-    "lint": "eslint --fix"
+    "lint": "eslint --fix",
+    "change": "changeset"
   },
   "keywords": [],
   "author": "baranwang",
