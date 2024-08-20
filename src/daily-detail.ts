@@ -1,11 +1,11 @@
 import dayjs from 'dayjs';
-import { createMobilePage } from './helper';
+import { getUrlDocument } from './helper';
 
 import type { LuckType } from './types';
 
-type WuxingElement = 'metal' | 'water' | 'wood' | 'fire' | 'earth';
+export type WuxingElement = 'metal' | 'water' | 'wood' | 'fire' | 'earth';
 
-interface HourlyDetail {
+export interface HourlyDetail {
   /**
    * 时辰
    */
@@ -44,53 +44,41 @@ export async function queryDailyDetail(date: string | Date = new Date()) {
   if (!day.isValid()) {
     throw new Error('日期格式有误');
   }
-  const { page, browser } = await createMobilePage();
-  await page.goto(`https://www.huangli.com/${day.format('YYYY/MM/DD')}.html`);
 
-  await page.waitForSelector('#ind5_cen');
+  const document = await getUrlDocument(`/${day.format('YYYY/MM/DD')}.html`);
 
-  const data = await page.evaluate(
-    (params) => {
-      const extractLuckData = (selector: string): string[] =>
-        Array.from(document.querySelectorAll(selector))
-          .map((a) => a.textContent?.trim() ?? '')
-          .filter(Boolean);
-      const favorable = extractLuckData('.box3 > div:first-child .box_a a');
-      const unfavorable = extractLuckData('.box3 > div:last-child .box_a a');
+  const extractLuckData = (selector: string): string[] =>
+    Array.from(document.querySelectorAll(selector))
+      .map((a) => a.textContent?.trim() ?? '')
+      .filter(Boolean);
 
-      const hourlyDetails: HourlyDetail[] = Array.from(document.querySelectorAll('#ind5_cen .con')).map((item) => {
-        const result = {} as HourlyDetail;
-        const info = Object.fromEntries(
-          Array.from(item.querySelectorAll('.tli span')).map(
-            (span) => span.textContent?.split('：') as [string, string],
-          ),
-        );
-        result.extraInfo = info;
-        result.time = info['时辰'].slice(1);
-        result.luckType = info['吉凶'] === '吉' ? 'favorable' : 'unfavorable';
+  const favorable = extractLuckData('.box3 > div:first-child .box_a a');
+  const unfavorable = extractLuckData('.box3 > div:last-child .box_a a');
 
-        item.querySelectorAll('.sli p').forEach((p, index) => {
-          result.luck ??= { favorable: [], unfavorable: [] };
-          result.luck[index === 0 ? 'favorable' : 'unfavorable'] = p.textContent?.split(' ') ?? [];
-        });
+  const hourlyDetails: HourlyDetail[] = Array.from(document.querySelectorAll('#ind5_cen .con')).map((item) => {
+    const result = {} as HourlyDetail;
+    const info = Object.fromEntries(
+      Array.from(item.querySelectorAll('.tli span')).map((span) => span.textContent?.split('：') as [string, string]),
+    );
+    result.extraInfo = info;
+    result.time = info['时辰'].slice(1);
+    result.luckType = info['吉凶'] === '吉' ? 'favorable' : 'unfavorable';
 
-        item.querySelectorAll('ul li').forEach((li) => {
-          const title = li.querySelector('font')?.textContent;
-          const value = li.querySelector('span')?.textContent;
-          if (title && value) {
-            result.wuxing ??= {} as Record<WuxingElement, number>;
-            result.wuxing[params.WUXING_ELEMENT_MAP[title]] = Number(value);
-          }
-        });
-        return result;
-      });
+    item.querySelectorAll('.sli p').forEach((p, index) => {
+      result.luck ??= { favorable: [], unfavorable: [] };
+      result.luck[index === 0 ? 'favorable' : 'unfavorable'] = p.textContent?.split(' ') ?? [];
+    });
 
-      return { favorable, unfavorable, hourlyDetails };
-    },
-    { WUXING_ELEMENT_MAP },
-  );
+    item.querySelectorAll('ul li').forEach((li) => {
+      const title = li.querySelector('font')?.textContent;
+      const value = li.querySelector('span')?.textContent;
+      if (title && value) {
+        result.wuxing ??= {} as Record<WuxingElement, number>;
+        result.wuxing[WUXING_ELEMENT_MAP[title]] = Number(value);
+      }
+    });
+    return result;
+  });
 
-  await browser.close();
-
-  return data;
+  return { favorable, unfavorable, hourlyDetails };
 }
