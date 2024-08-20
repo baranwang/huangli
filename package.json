@@ -1,6 +1,6 @@
 {
   "name": "huangli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "types": "./dist/types/index.d.ts",
   "jsnext:source": "./src/index.ts",

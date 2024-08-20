@@ -1,5 +1,11 @@
 # huangli
 
+## 1.0.5
+
+### Patch Changes
+
+- 20f2b25: 修改 puppeteer 安装脚本
+
 ## 1.0.3
 
 ### Patch Changes
