@@ -1,5 +1,11 @@
 # huangli
 
+## 1.1.0
+
+### Minor Changes
+
+- 772c411: 移除 puppeteer 依赖，提高响应速度
+
 ## 1.0.5
 
 ### Patch Changes
